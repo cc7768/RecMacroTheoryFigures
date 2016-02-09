@@ -97,7 +97,28 @@ class Chp20_Sec3_Economy(object):
             l1[s] = pi1j*v_exit + jp1_S_terms
             g1[s] = uinv((l1[s]*(1-beta*pi1j) - jp1_S_terms)/(pi1j))
 
-        return g1, l1
+        # Allocate space for money lender vf
+        P = np.empty(nstates)
+
+        # Solve for values of money lender
+        P[-1] = 1/(1-beta) * np.dot(pi_y, ybar - g1[-1])
+        for s in range(nstates-2, -1, -1):
+            # Pull out cvalues for current states
+            ck = g1[s]
+
+            # Sum of 1 to j values of pi times beta
+            pi1j = np.sum(pi_y[:s+1])
+
+            # Solve for what happens if you have low/high shocks relative
+            # to the state you bring into period
+            low_flow = np.dot(pi_y[:s+1], ybar[:s+1] - ck)
+            high_flow = np.dot(pi_y[s+1:], ybar[s+1:] - g1[s+1:])
+
+            # Give continuation values of high shocks
+            high_cont = np.dot(pi_y[s+1:], P[s+1:])
+            P[s] = ((low_flow + high_flow) + beta*high_cont)/(1 - beta*pi1j)
+
+        return g1, l1, P
 
     def simulate(self, g1, l1, T):
         """
