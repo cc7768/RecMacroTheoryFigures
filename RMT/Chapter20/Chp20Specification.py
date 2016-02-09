@@ -42,7 +42,7 @@ class Chp20_Sec3_Economy(object):
 
         # Get the autarky value for the agent
         self.v_aut = (1/(1-beta)) * np.dot(self.u(self.ybar), self.pi_y)
-        self.c_complete_markets = self.uinv(np.dot(self.pi_y, self.u(self.ybar)))
+        self.c_complete_markets = np.dot(self.pi_y, self.ybar)
 
     def v(self, c, w):
         return self.u(c) + self.beta*w
@@ -121,7 +121,7 @@ class Chp20_Sec3_Economy(object):
         # Pull off consumption and continuation value sequences
         c = g1[pol_indexes]
         w = l1[pol_indexes]
-        y = ybar[pol_indexes]
+        y = ybar[y_indexes]
 
         return c, w, y
 
