@@ -42,6 +42,7 @@ class Chp20_Sec3_Economy(object):
 
         # Get the autarky value for the agent
         self.v_aut = (1/(1-beta)) * np.dot(self.u(self.ybar), self.pi_y)
+        self.c_complete_markets = self.uinv(np.dot(self.pi_y, self.u(self.ybar)))
 
     def v(self, c, w):
         return self.u(c) + self.beta*w
